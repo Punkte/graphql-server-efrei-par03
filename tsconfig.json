@@ -5,6 +5,8 @@
     "lib": ["es2020"],
     "target": "es2020",
     "module": "esnext",
+    "strict": true,
+    "noImplicitAny": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "types": ["node"]
