@@ -1,39 +1,7 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
-import {gql} from 'graphql-tag'
- 
-const typeDefs = gql`
-  type Query {
-    doctors: [Doctor]
-  }
-
-  type Doctor {
-    name: String
-    speciality: Speciality
-  }
- 
-  enum Speciality {
-    PSYCHOLOGIST
-    OPHTALMOLOGIST
-  }
-`;
-
-const doctorsData = [
-  {
-    name: 'Samia Mekame',
-    speciality: 'OPHTALMOLOGIST',
-  },
-  {
-    name: 'Catherine Bedoy',
-    speciality: 'PSYCHOLOGIST',
-  },
-];
-
-const resolvers = {
-  Query: {
-    doctors: () => doctorsData
-  }
-}
+import { resolvers } from './resolvers.js';
+import { typeDefs } from './schema.js';
 
 const server = new ApolloServer({
   typeDefs,
