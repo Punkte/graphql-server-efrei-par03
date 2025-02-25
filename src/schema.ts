@@ -15,6 +15,8 @@ export const typeDefs = gql`
 
   type Mutation {
     incrementTrackView(id: ID!): IncrementTrackViewReponse!
+    incrementNumberOfLikes(id: ID!): IncrementNumberOfLikesReponse!
+    createUser(username: String!, password: String!): CreateUserResponse
   }
 
   type IncrementTrackViewReponse {
@@ -24,6 +26,25 @@ export const typeDefs = gql`
     track: Track
   }
 
+  type IncrementNumberOfLikesReponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    track: Track
+  }
+
+  type CreateUserResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    user: User
+  }
+
+  type User {
+    id: ID!
+    username: String!
+  }
+
   type Track {
     id: ID!
     thumbnail: String!
@@ -31,6 +52,7 @@ export const typeDefs = gql`
     description: String!
     author: Author
     numberOfViews: Int
+    numberOfLikes: Int
   }
 
   type Author {

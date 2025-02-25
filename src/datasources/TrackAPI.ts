@@ -15,4 +15,7 @@ export class TrackAPI extends RESTDataSource {
   incrementTrackViews(trackId: string) {
     return this.patch<TrackModel>(`track/${trackId}/numberOfViews`)
   }
+  incrementNumberOfLikes(trackId: string) {
+    return this.patch<TrackModel>(`track/${trackId}/numberOfLikes`)
+  }
 }
