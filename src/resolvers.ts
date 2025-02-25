@@ -39,6 +39,28 @@ export const resolvers: Resolvers = {
     getFilms: (_, __, {dataSources: {ghibliAPI}}) => ghibliAPI.getFilms(),
     getPeople: (_, __, {dataSources: {ghibliAPI}}) => ghibliAPI.getPeople(),
   },
+  Mutation: {
+    incrementTrackView: async (_, {id}, {dataSources: {trackAPI}}) => {
+      try {
+        const track = await trackAPI.incrementTrackViews(id);
+        const message = `incrementTrackViews successful! `
+  
+        return {
+          code: 200,
+          message,
+          success: true,
+          track
+        }
+      } catch {
+        return {
+          code: 304,
+          message: 'trackViews not incremented',
+          success: false,
+          track: null
+        }
+      }
+    }
+  },
   Track: {
     author: (parent, _, {dataSources}) => {
       return dataSources.trackAPI.getAuthorBy(parent.authorId)
