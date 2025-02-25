@@ -1,3 +1,5 @@
+import { User } from "@prisma/client";
+
 export type TrackModel = {
   id: string;
   title: string;
@@ -24,3 +26,5 @@ export type PeopleModel = {
   eye_color: string;
   films: string[]
 }
+
+export type UserModel = User

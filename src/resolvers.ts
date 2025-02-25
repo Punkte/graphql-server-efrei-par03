@@ -1,4 +1,5 @@
 import { createUser } from "./mutations/users/createUser.js";
+import { signIn } from "./mutations/users/signIn.js";
 import { Resolvers, Speciality } from "./types.js";
 import { getClosestColor } from "./utils/colors.js";
 
@@ -83,6 +84,7 @@ export const resolvers: Resolvers = {
       }
     },
     createUser,
+    signIn,
   },
   Track: {
     author: (parent, _, {dataSources}) => {
