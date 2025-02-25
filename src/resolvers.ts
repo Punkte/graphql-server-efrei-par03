@@ -35,11 +35,20 @@ export const resolvers: Resolvers = {
     },
     getTracks: (_, __, {dataSources}) => {
       return dataSources.trackAPI.getTracks()
-    }
+    },
+    getFilms: (_, __, {dataSources: {ghibliAPI}}) => ghibliAPI.getFilms(),
+    getPeople: (_, __, {dataSources: {ghibliAPI}}) => ghibliAPI.getPeople(),
   },
   Track: {
     author: (parent, _, {dataSources}) => {
       return dataSources.trackAPI.getAuthorBy(parent.authorId)
     }
+  },
+  Film: {
+    people: ({people}, _, {dataSources: {ghibliAPI}}) => ghibliAPI.getPeopleByUrls(people),
+  },
+  People: {
+    eyeColor: ({eye_color}) => eye_color,
+    films: ({films}, _, {dataSources: {ghibliAPI}}) => ghibliAPI.getFilmsByUrls(films)
   }
 }

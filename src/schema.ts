@@ -9,6 +9,8 @@ export const typeDefs = gql`
     divide(number1: Float!, number2: Float!): Float
     closestColor(hexa: String!): String
     getTracks: [Track!]!
+    getFilms: [Film]!
+    getPeople: [People]!
   }
 
   type Track {
@@ -33,5 +35,18 @@ export const typeDefs = gql`
   enum Speciality {
     PSYCHOLOGIST
     OPHTALMOLOGIST
+  }
+
+  type Film {
+    id: ID
+    title: String
+    people: [People]!
+  }
+
+  type People {
+    id: ID
+    name: String
+    eyeColor: String
+    films: [Film]!
   }
 `;
