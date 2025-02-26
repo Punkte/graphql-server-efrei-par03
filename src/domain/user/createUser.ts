@@ -1,7 +1,7 @@
 import { hashPassword } from "../../modules/auth.js";
 import { MutationResolvers } from "../../types.js";
 
-export const createUser: MutationResolvers['createUser'] = async (_, {username, password}, {dataSources: {db}}) => {
+export const createUser: NonNullable<MutationResolvers['createUser']> = async (_, {username, password}, {dataSources: {db}}) => {
   try {
     const createdUser = await db.user.create({
       data: {
