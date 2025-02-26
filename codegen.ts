@@ -12,6 +12,7 @@ const config: CodegenConfig = {
           Author: './models#AuthorModel',
           Film: './models#FilmModel',
           People: './models#PeopleModel',
+          TodoList: './models#TodoListModel',
         }
       }
     }

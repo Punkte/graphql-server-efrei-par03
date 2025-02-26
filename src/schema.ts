@@ -11,6 +11,7 @@ export const typeDefs = gql`
     getTracks: [Track!]!
     getFilms: [Film]!
     getPeople: [People]!
+    getTodoList(id: ID!): TodoList
   }
 
   type Mutation {
@@ -18,6 +19,7 @@ export const typeDefs = gql`
     incrementNumberOfLikes(id: ID!): IncrementNumberOfLikesReponse!
     createUser(username: String!, password: String!): CreateUserResponse!
     signIn(username: String!, password: String!): SignInResponse!
+    createTodo(name: String!): CreateTodoResponse!
   }
 
   type IncrementTrackViewReponse {
@@ -89,5 +91,25 @@ export const typeDefs = gql`
     name: String
     eyeColor: String
     films: [Film]!
+  }
+
+  type TodoList {
+    id: ID!
+    name: String!
+    todoItems: [TodoItem!]!
+    user: User!
+  }
+
+  type TodoItem {
+    id: ID!
+    description: String!
+    todoList: TodoList
+  }
+
+  type CreateTodoResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    todoList: TodoList
   }
 `;

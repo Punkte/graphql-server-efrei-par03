@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User, TodoList } from "@prisma/client";
 
 export type TrackModel = {
   id: string;
@@ -26,5 +26,7 @@ export type PeopleModel = {
   eye_color: string;
   films: string[]
 }
+
+export type TodoListModel = TodoList
 
 export type UserModel = User

@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { TrackModel, AuthorModel, FilmModel, PeopleModel } from './models';
+import { TrackModel, AuthorModel, FilmModel, PeopleModel, TodoListModel } from './models';
 import { Context } from './context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -24,6 +24,14 @@ export type Author = {
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   photo: Scalars['String']['output'];
+};
+
+export type CreateTodoResponse = {
+  __typename?: 'CreateTodoResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+  todoList?: Maybe<TodoList>;
 };
 
 export type CreateUserResponse = {
@@ -65,10 +73,16 @@ export type IncrementTrackViewReponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createTodo: CreateTodoResponse;
   createUser: CreateUserResponse;
   incrementNumberOfLikes: IncrementNumberOfLikesReponse;
   incrementTrackView: IncrementTrackViewReponse;
   signIn: SignInResponse;
+};
+
+
+export type MutationCreateTodoArgs = {
+  name: Scalars['String']['input'];
 };
 
 
@@ -109,6 +123,7 @@ export type Query = {
   doctors?: Maybe<Array<Maybe<Doctor>>>;
   getFilms: Array<Maybe<Film>>;
   getPeople: Array<Maybe<People>>;
+  getTodoList?: Maybe<TodoList>;
   getTracks: Array<Track>;
   multiply: Scalars['Float']['output'];
   substract: Scalars['Float']['output'];
@@ -137,6 +152,11 @@ export type QueryDoctorsArgs = {
 };
 
 
+export type QueryGetTodoListArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type QueryMultiplyArgs = {
   number1: Scalars['Float']['input'];
   number2: Scalars['Float']['input'];
@@ -160,6 +180,21 @@ export enum Speciality {
   Ophtalmologist = 'OPHTALMOLOGIST',
   Psychologist = 'PSYCHOLOGIST'
 }
+
+export type TodoItem = {
+  __typename?: 'TodoItem';
+  description: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  todoList?: Maybe<TodoList>;
+};
+
+export type TodoList = {
+  __typename?: 'TodoList';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  todoItems: Array<TodoItem>;
+  user: User;
+};
 
 export type Track = {
   __typename?: 'Track';
@@ -251,6 +286,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Author: ResolverTypeWrapper<AuthorModel>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreateTodoResponse: ResolverTypeWrapper<Omit<CreateTodoResponse, 'todoList'> & { todoList?: Maybe<ResolversTypes['TodoList']> }>;
   CreateUserResponse: ResolverTypeWrapper<CreateUserResponse>;
   Doctor: ResolverTypeWrapper<Doctor>;
   Film: ResolverTypeWrapper<FilmModel>;
@@ -265,6 +301,8 @@ export type ResolversTypes = {
   SignInResponse: ResolverTypeWrapper<SignInResponse>;
   Speciality: Speciality;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  TodoItem: ResolverTypeWrapper<Omit<TodoItem, 'todoList'> & { todoList?: Maybe<ResolversTypes['TodoList']> }>;
+  TodoList: ResolverTypeWrapper<TodoListModel>;
   Track: ResolverTypeWrapper<TrackModel>;
   User: ResolverTypeWrapper<User>;
 };
@@ -273,6 +311,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Author: AuthorModel;
   Boolean: Scalars['Boolean']['output'];
+  CreateTodoResponse: Omit<CreateTodoResponse, 'todoList'> & { todoList?: Maybe<ResolversParentTypes['TodoList']> };
   CreateUserResponse: CreateUserResponse;
   Doctor: Doctor;
   Film: FilmModel;
@@ -286,6 +325,8 @@ export type ResolversParentTypes = {
   Query: {};
   SignInResponse: SignInResponse;
   String: Scalars['String']['output'];
+  TodoItem: Omit<TodoItem, 'todoList'> & { todoList?: Maybe<ResolversParentTypes['TodoList']> };
+  TodoList: TodoListModel;
   Track: TrackModel;
   User: User;
 };
@@ -294,6 +335,14 @@ export type AuthorResolvers<ContextType = Context, ParentType extends ResolversP
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   photo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateTodoResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CreateTodoResponse'] = ResolversParentTypes['CreateTodoResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  todoList?: Resolver<Maybe<ResolversTypes['TodoList']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -335,6 +384,7 @@ export type IncrementTrackViewReponseResolvers<ContextType = Context, ParentType
 };
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createTodo?: Resolver<ResolversTypes['CreateTodoResponse'], ParentType, ContextType, RequireFields<MutationCreateTodoArgs, 'name'>>;
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
   incrementNumberOfLikes?: Resolver<ResolversTypes['IncrementNumberOfLikesReponse'], ParentType, ContextType, RequireFields<MutationIncrementNumberOfLikesArgs, 'id'>>;
   incrementTrackView?: Resolver<ResolversTypes['IncrementTrackViewReponse'], ParentType, ContextType, RequireFields<MutationIncrementTrackViewArgs, 'id'>>;
@@ -356,6 +406,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   doctors?: Resolver<Maybe<Array<Maybe<ResolversTypes['Doctor']>>>, ParentType, ContextType, Partial<QueryDoctorsArgs>>;
   getFilms?: Resolver<Array<Maybe<ResolversTypes['Film']>>, ParentType, ContextType>;
   getPeople?: Resolver<Array<Maybe<ResolversTypes['People']>>, ParentType, ContextType>;
+  getTodoList?: Resolver<Maybe<ResolversTypes['TodoList']>, ParentType, ContextType, RequireFields<QueryGetTodoListArgs, 'id'>>;
   getTracks?: Resolver<Array<ResolversTypes['Track']>, ParentType, ContextType>;
   multiply?: Resolver<ResolversTypes['Float'], ParentType, ContextType, RequireFields<QueryMultiplyArgs, 'number1' | 'number2'>>;
   substract?: Resolver<ResolversTypes['Float'], ParentType, ContextType, RequireFields<QuerySubstractArgs, 'number1' | 'number2'>>;
@@ -366,6 +417,21 @@ export type SignInResponseResolvers<ContextType = Context, ParentType extends Re
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TodoItemResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TodoItem'] = ResolversParentTypes['TodoItem']> = {
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  todoList?: Resolver<Maybe<ResolversTypes['TodoList']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TodoListResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TodoList'] = ResolversParentTypes['TodoList']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  todoItems?: Resolver<Array<ResolversTypes['TodoItem']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -388,6 +454,7 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
 
 export type Resolvers<ContextType = Context> = {
   Author?: AuthorResolvers<ContextType>;
+  CreateTodoResponse?: CreateTodoResponseResolvers<ContextType>;
   CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
   Doctor?: DoctorResolvers<ContextType>;
   Film?: FilmResolvers<ContextType>;
@@ -397,6 +464,8 @@ export type Resolvers<ContextType = Context> = {
   People?: PeopleResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SignInResponse?: SignInResponseResolvers<ContextType>;
+  TodoItem?: TodoItemResolvers<ContextType>;
+  TodoList?: TodoListResolvers<ContextType>;
   Track?: TrackResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
